@@ -41,6 +41,50 @@ router.post('/register', async (req, res) => {
     }
 });
 
+// ✅ User Login
+router.post('/login', async (req, res) => {
+    const { username, password } = req.body;
 
+    try {
+        const users = await db.query('SELECT * FROM users WHERE username = ?', [username]);
+        if (users.length === 0) {
+            return res.status(401).json({ message: "Invalid credentials." });
+        }
+
+        const user = users[0];
+        const passwordMatch = await bcrypt.compare(password, user.password);
+        if (!passwordMatch) {
+            return res.status(401).json({ message: "Invalid credentials." });
+        }
+
+        // Generate JWT Token
+        const token = jwt.sign(
+            { id: user.id, username: user.username },
+            process.env.JWT_SECRET,
+            { expiresIn: '1h' }
+        );
+
+        res.json({ message: "Login successful.", token, apiKey: user.apiKey });
+
+    } catch (error) {
+        console.error("Login error:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+});
+
+// ✅ User Profile (Protected Route)
+router.get('/profile', auth, async (req, res) => {
+    try {
+        const users = await db.query('SELECT username, apiKey FROM users WHERE id = ?', [req.user.id]);
+        if (users.length === 0) {
+            return res.status(404).json({ message: "User not found." });
+        }
+
+        res.json(users[0]);
+    } catch (error) {
+        console.error("Error fetching profile:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+});
 
 module.exports = router;
