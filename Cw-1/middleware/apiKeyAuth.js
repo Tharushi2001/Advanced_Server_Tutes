@@ -1,4 +1,4 @@
-const db = require('../config/db'); // Assuming db is using mysql2 with promise support
+const db = require('../config/db'); // Import the db instance with promise support
 
 const apiKeyAuth = async (req, res, next) => {
     const apiKey = req.headers['api-key']; // API key passed in headers as 'api-key'
@@ -7,11 +7,14 @@ const apiKeyAuth = async (req, res, next) => {
         return res.status(400).json({ message: 'API key is required' });
     }
 
-    try {
-        // Use db.promise() to handle async query properly with await
-        const [user] = await db.promise().query('SELECT * FROM users WHERE apiKey = ?', [apiKey]);
+    console.log('Received API key:', apiKey); // Log the received API key
 
-        if (!user.length) {
+    try {
+        const [user] = await db.query('SELECT * FROM users WHERE apiKey = ?', [apiKey]);
+
+        console.log('Database query result:', user); // Log the result from the database
+
+        if (!user || user.length === 0) {
             return res.status(403).json({ message: 'Invalid API key' });
         }
 
@@ -24,3 +27,4 @@ const apiKeyAuth = async (req, res, next) => {
 };
 
 module.exports = apiKeyAuth;
+
