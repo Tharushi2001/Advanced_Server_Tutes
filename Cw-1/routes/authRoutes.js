@@ -1,10 +1,8 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
 const UserDao = require('../dao/userDao');
 
 const router = express.Router();
-const SECRET_KEY = process.env.JWT_SECRET;
 
 // User Registration (Signup)
 router.post('/register', async (req, res) => {
@@ -53,10 +51,8 @@ router.post('/login', async (req, res) => {
             return res.status(401).json({ message: 'Invalid username or password' });
         }
 
-        // Generate JWT Token
-        const token = jwt.sign({ userId: user.id, username: user.username }, SECRET_KEY, { expiresIn: '1h' });
-
-        return res.json({ message: 'Login successful', token, apiKey: user.apiKey });
+        // Return API Key without JWT token
+        return res.json({ message: 'Login successful', apiKey: user.apiKey });
     } catch (error) {
         console.error('Login Error:', error);
         return res.status(500).json({ message: 'Internal Server Error' });

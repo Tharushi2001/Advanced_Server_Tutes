@@ -1,28 +1,32 @@
 const express = require('express');
 const ApiKeyDao = require('../Dao/apiKeyDao');
-const jwt = require('jsonwebtoken');
 
 const router = express.Router();
-const SECRET_KEY = process.env.JWT_SECRET || 'your_jwt_secret';
 
-// Middleware to Authenticate JWT Token
-function authenticateToken(req, res, next) {
-    const token = req.headers.authorization?.split(' ')[1];
-    if (!token) {
-        return res.status(401).json({ message: 'Unauthorized: No token provided' });
+// Middleware to Authenticate API Key
+function authenticateApiKey(req, res, next) {
+    const apiKey = req.headers['x-api-key'];
+    if (!apiKey) {
+        return res.status(401).json({ message: 'Unauthorized: No API Key provided' });
     }
 
-    jwt.verify(token, SECRET_KEY, (err, user) => {
-        if (err) return res.status(403).json({ message: 'Invalid token' });
+    ApiKeyDao.getUserByApiKey(apiKey).then(user => {
+        if (!user) {
+            return res.status(403).json({ message: 'Invalid API Key' });
+        }
+
         req.user = user;
         next();
+    }).catch(error => {
+        console.error('Error authenticating API Key:', error);
+        return res.status(500).json({ message: 'Internal Server Error' });
     });
 }
 
-// ✅ Retrieve API Key (Protected Route)
-router.get('/get-api-key', authenticateToken, async (req, res) => {
+// Retrieve API Key (Protected Route)
+router.get('/get-api-key', authenticateApiKey, async (req, res) => {
     try {
-        const userId = req.user.userId;
+        const userId = req.user.id;
         const apiKey = await ApiKeyDao.getApiKeyByUserId(userId);
 
         if (!apiKey) {
@@ -36,10 +40,10 @@ router.get('/get-api-key', authenticateToken, async (req, res) => {
     }
 });
 
-// ✅ Regenerate API Key (Protected Route)
-router.post('/regenerate-api-key', authenticateToken, async (req, res) => {
+// Regenerate API Key (Protected Route)
+router.post('/regenerate-api-key', authenticateApiKey, async (req, res) => {
     try {
-        const userId = req.user.userId;
+        const userId = req.user.id;
 
         // Generate new API Key
         const newApiKey = require('crypto').randomBytes(32).toString('hex');

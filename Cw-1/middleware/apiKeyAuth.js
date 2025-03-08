@@ -12,7 +12,7 @@ const apiKeyAuth = async (req, res, next) => {
     try {
         const [user] = await db.query('SELECT * FROM users WHERE apiKey = ?', [apiKey]);
 
-        console.log('Database query result:', user); // Log the result from the database
+      
 
         if (!user || user.length === 0) {
             return res.status(403).json({ message: 'Invalid API key' });
