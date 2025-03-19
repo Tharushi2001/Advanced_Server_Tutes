@@ -29,14 +29,27 @@ class AuthController {
       if (!user || !bcrypt.compareSync(password, user.password)) {
         return res.status(401).json({ message: 'Invalid credentials' });
       }
-
+      //generate API key
       const apiKey = crypto.randomBytes(32).toString('hex');
       await ApiKeyDao.createApiKey(apiKey, user.id);
+
+      //start a session
+      req.session.userId=user.id;
+
       await LogDao.createLog(user.id, 'User logged in', `User ${username} logged in successfully and API key generated.`);
       res.json({ apiKey });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
+  }
+
+  static logout(req,res){
+    req.session.destroy(err=>{
+      if(err){
+        return res.status(500).json({message:'could not logout'});
+      }
+      res.json({message:'Logout successfull'});
+    });
   }
 }
 
