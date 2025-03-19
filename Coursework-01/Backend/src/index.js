@@ -10,12 +10,15 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(session({
-    secret:process.env.SESSION_SECRET || 'restcountry@123',
-    resave:false,
-    saveUninitialized:true,
-    cookie:{secure:false}
-
-}));
+    secret: process.env.SESSION_SECRET || 'restcountry@123', // Ensure session secret is set
+    resave: false,
+    saveUninitialized: false,  // Create session only when needed
+    cookie: {
+        secure: process.env.NODE_ENV === 'production', // secure cookies in production
+        httpOnly: true,
+        maxAge: 3600000 // 1 hour in milliseconds
+      }
+  }));
 
 // Routes
 app.use('/api/auth', authRoutes);

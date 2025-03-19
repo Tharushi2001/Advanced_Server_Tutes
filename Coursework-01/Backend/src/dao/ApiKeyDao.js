@@ -19,9 +19,9 @@ class ApiKeyDao {
     });
   }
 
-  static deleteApiKey(id) {
+  static deleteApiKeyByUserId(userId) {
     return new Promise((resolve, reject) => {
-      db.query('DELETE FROM api_keys WHERE id = ?', [id], (err, results) => {
+      db.query('DELETE FROM api_keys WHERE id = ?', [userId], (err, results) => {
         if (err) return reject(err);
         resolve(results.affectedRows);
       });

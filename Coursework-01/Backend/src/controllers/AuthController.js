@@ -24,6 +24,10 @@ class AuthController {
     const { username, password } = req.body;
 
     try {
+      if (req.session.userId) {
+        return res.status(400).json({ message: 'User already logged in' });
+      }
+  
       // Corrected method name
       const user = await UserDao.getUserByUsername(username);
       if (!user || !bcrypt.compareSync(password, user.password)) {
@@ -36,21 +40,47 @@ class AuthController {
       //start a session
       req.session.userId=user.id;
 
+        // Debugging log
+        console.log('Session after login:', req.session);
+
+
       await LogDao.createLog(user.id, 'User logged in', `User ${username} logged in successfully and API key generated.`);
-      res.json({ apiKey });
+    
+      res.json({ message: `User ${username} logged in successfully.`, apiKey });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
   }
 
-  static logout(req,res){
-    req.session.destroy(err=>{
-      if(err){
-        return res.status(500).json({message:'could not logout'});
+ 
+  static async logout(req, res) {
+    try {
+      console.log('Session at logout:', req.session)
+      // Check if the user is logged in
+      if (!req.session.userId) {
+        return res.status(400).json({ message: 'User  is not logged in' });
       }
-      res.json({message:'Logout successfull'});
-    });
+  
+      // Log the logout action
+      await LogDao.createLog(req.session.userId, 'User  logged out', `User  with ID ${req.session.userId} logged out successfully.`);
+  
+      // Destroy the session
+      req.session.destroy(err => {
+        if (err) {
+          return res.status(500).json({ error: 'Could not log out. Please try again.' });
+        }
+  
+        // Optionally, you can clear the session cookie
+        res.clearCookie('connect.sid'); // Replace 'connect.sid' with your session cookie name if different
+  
+        res.json({ message: 'User  logged out successfully.' });
+      });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
   }
+  
+  
 }
 
 module.exports = AuthController;
