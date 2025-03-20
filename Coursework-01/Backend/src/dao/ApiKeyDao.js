@@ -19,6 +19,20 @@ class ApiKeyDao {
     });
   }
 
+  static getLatestApiKeyByUserId(userId) {
+    return new Promise((resolve, reject) => {
+      db.query(
+        'SELECT * FROM api_keys WHERE user_id = ? ORDER BY id DESC LIMIT 1',
+        [userId],
+        (err, results) => {
+          if (err) return reject(err);
+          resolve(results[0]); // Return the latest API key
+        }
+      );
+    });
+  }
+  
+
   static deleteApiKey(id) {
     return new Promise((resolve, reject) => {
       db.query('DELETE FROM api_keys WHERE id = ?', [id], (err, results) => {

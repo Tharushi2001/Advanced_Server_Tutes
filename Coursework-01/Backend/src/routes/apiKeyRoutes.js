@@ -10,8 +10,9 @@ const router = express.Router();
 // Generate API key (No authentication, only API key validation needed)
 router.post('/generate', ApiKeyController.generateApiKey); 
 
-// List API keys (Requires valid API key)
-router.get('/', ApiKeyMiddleware.validateApiKey, ApiKeyController.listApiKeys);
+router.get('/getkey',ApiKeyMiddleware.validateApiKey, ApiKeyController.getApiKey);
+
+
 
 // Revoke API key (Requires valid API key)
 router.delete('/:id', ApiKeyMiddleware.validateApiKey, ApiKeyController.revokeApiKey);

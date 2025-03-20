@@ -9,6 +9,12 @@ const Register = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        // Check if fields are empty
+        if (!username || !password) {
+            alert('Please fill in all fields');
+            return; // Prevent sending the request if fields are empty
+        }
+
         const data = {
             username: username,
             password: password

@@ -1,14 +1,51 @@
-// src/components/Login.js
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const navigate = useNavigate(); // Hook to navigate after login
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Handle login logic (e.g., send credentials to the server)
-        alert(`Username: ${username}, Password: ${password}`);
+
+        // Check if fields are empty
+        if (!username || !password) {
+            alert('Please fill in all fields');
+            return; // Prevent sending the request if fields are empty
+        }
+
+        const data = {
+            username: username,
+            password: password
+        };
+
+        try {
+            // Send login data to backend
+            const response = await fetch('http://localhost:3001/api/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                // Store the token in localStorage/sessionStorage
+                console.log('Setting API key:', result.apiKey); // Log the API key
+                localStorage.setItem('apiKey', result.apiKey);
+
+                alert('Login successful!');
+                navigate('/dashboard'); // Navigate to the dashboard or another protected route
+            } else {
+                alert(`Error: ${result.error || 'Invalid credentials!'}`);
+            }
+        } catch (error) {
+            console.error('Error during login:', error);
+            alert('An error occurred during login.');
+        }
     };
 
     return (
