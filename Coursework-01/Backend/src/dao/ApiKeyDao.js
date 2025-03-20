@@ -38,6 +38,14 @@ class ApiKeyDao {
     });
   }
   
+  static getApiKeyByKey(key) {
+    return new Promise((resolve, reject) => {
+      db.query('SELECT * FROM api_keys WHERE `key` = ?', [key], (err, results) => {
+        if (err) return reject(err);
+        resolve(results[0]);
+      });
+    });
+  }
 
   static updateApiKey(id, newKey, userId) {
     return new Promise((resolve, reject) => {
