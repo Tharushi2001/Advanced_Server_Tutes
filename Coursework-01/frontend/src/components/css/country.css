@@ -1,0 +1,36 @@
+/* Style for the Dashboard Container */
+.dashboard-Container {
+    background-color:#578FCA;
+    color: rgb(255, 255, 255); /* White text */
+    width: 100%;
+    min-height: 98vh;
+    display: flex;
+    justify-content: center; /* Centers content horizontally */
+    align-items: center; /* Centers content vertically */
+    padding: 0;
+}
+
+/* Style for the content section inside the dashboard */
+.content {
+    padding: 20px;
+    margin: 30px;
+    background-color:#3674B5; /* Optional: add a background to make the content stand out */
+    color: #ffffff; /* Dark text to contrast the background */
+    border-radius: 8px; /* Optional: add some rounding to the content box */
+    width: 80%; /* You can adjust this as per your layout */
+    max-width: 1000px; /* Optional: max width to prevent content from becoming too wide */
+}
+
+.apigenerate{
+
+    background-color:#D1F8EF;
+    color: black;
+    padding: 20px;
+}
+
+.country-details{
+    margin-top: 20px;
+    background-color:#D1F8EF;
+    color: black;
+    padding: 20px;
+}

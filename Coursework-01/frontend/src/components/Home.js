@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom'; 
 import './css/home.css';
-import countryImage from '../assets/images/country.jpg';  // Adjust the path to your image
+import countryImage from '../assets/images/country.jpg';  
 
 const Home = () => {
     return (

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import './css/login.css';
 
 const Register = () => {
     const [username, setUsername] = useState('');
@@ -46,6 +47,8 @@ const Register = () => {
     };
 
     return (
+        <div className='login-container'>
+            <div className='login-form'>
         <div style={{ maxWidth: '400px', margin: '0 auto', padding: '20px', textAlign: 'center' }}>
             <h2>Register</h2>
             <form onSubmit={handleSubmit}>
@@ -71,6 +74,8 @@ const Register = () => {
                     Register
                 </button>
             </form>
+        </div>
+        </div>
         </div>
     );
 };

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import './css/country.css';
 
 const Dashboard = () => {
   const [apiKey, setApiKey] = useState(null);
@@ -63,11 +64,16 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <div>
+    <div className='dashboard-Container'>
+      <div className='content'>
       <h1>Dashboard</h1>
 
-      <button onClick={fetchApiKey} disabled={loading}>
+      <div className='apigenerate'>
+
+      <button className='key-btn' style={{  padding: '10px', borderRadius: '8px', backgroundColor: 'white', color: 'Black', border: '1px solid' }}
+        onClick={fetchApiKey} disabled={loading}>
         {loading ? 'Loading...' : 'Get My API Key'}
+      
       </button>
 
       {error && <p style={{ color: 'red' }}>{error}</p>}
@@ -78,7 +84,8 @@ const Dashboard = () => {
           <p>{apiKey}</p>
         </div>
       )}
-
+</div>
+<div className='country-details'>
       <form onSubmit={fetchCountryDetails} style={{ marginTop: '20px' }}>
         <input
           type="text"
@@ -100,6 +107,8 @@ const Dashboard = () => {
           <img src={countryDetails.flag} alt={`${countryDetails.name} flag`} style={{ width: '100px' }} />
         </div>
       )}
+      </div>
+    </div>
     </div>
   );
 };
