@@ -9,6 +9,12 @@ const Dashboard = () => {
   const [countryName, setCountryName] = useState('');
   const [countryDetails, setCountryDetails] = useState(null);
 
+  // Function to logout and clear API key
+  const logoutAndClearApiKey = () => {
+    localStorage.removeItem('apiKey');  // Remove the API key from localStorage
+    setApiKey(null);  // Clear the API key from the state
+  };
+
   // Function to fetch the current API key
   const fetchApiKey = async () => {
     setLoading(true);
@@ -16,7 +22,7 @@ const Dashboard = () => {
 
     try {
       // Get the user's API key from localStorage
-      const apiKey = localStorage.getItem('apiKey'); // This would be set during login
+      const apiKey = localStorage.getItem('apiKey');
 
       if (!apiKey) {
         setError('API key is not available. Please login again.');
@@ -66,50 +72,57 @@ const Dashboard = () => {
   return (
     <div className='dashboard-Container'>
       <div className='content'>
-      <h1>Dashboard</h1>
+        <h1>Dashboard</h1>
 
-      <div className='apigenerate'>
+        <div className='apigenerate'>
+          <button
+            className='key-btn'
+            style={{ padding: '10px', borderRadius: '20px', backgroundColor: '#3674B5', color: 'white', border: '1px solid' }}
+            onClick={fetchApiKey}
+            disabled={loading}
+          >
+            {loading ? 'Loading...' : 'Get My API Key'}
+          </button>
 
-      <button className='key-btn' style={{  padding: '10px', borderRadius: '20px', backgroundColor: '#3674B5', color: 'white', border: '1px solid' }}
-        onClick={fetchApiKey} disabled={loading}>
-        {loading ? 'Loading...' : 'Get My API Key'}
-      
-      </button>
+          {error && <p style={{ color: 'red' }}>{error}</p>}
 
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-
-      {apiKey && (
-        <div>
-          <h2>Your API Key:</h2>
-          <p>{apiKey}</p>
+          {apiKey && (
+            <div>
+              <h2>Your API Key:</h2>
+              <p>{apiKey}</p>
+            </div>
+          )}
         </div>
-      )}
-</div>
-<div className='country-details'>
-      <form onSubmit={fetchCountryDetails} style={{ marginTop: '20px' }}>
-        <input
-          type="text"
-          placeholder="Enter Country Name"
-          value={countryName}
-          onChange={(e) => setCountryName(e.target.value)}
-          required
-        />
-        <button type="submit"  className="search-btn">Get Country Details</button>
-      </form>
 
+        <div className='country-details'>
+          <form onSubmit={fetchCountryDetails} style={{ marginTop: '20px' }}>
+            <input
+              type="text"
+              placeholder="Enter Country Name"
+              value={countryName}
+              onChange={(e) => setCountryName(e.target.value)}
+              required
+            />
+            <button type="submit" className="search-btn">Get Country Details</button>
+          </form>
 
-      {countryDetails && (
-        <div style={{ marginTop: '20px' }}>
-          <h3>Country Details:</h3>
-          <p><strong>Name:</strong> {countryDetails.name}</p>
-          <p><strong>Capital:</strong> {countryDetails.capital}</p>
-          <p><strong>Currencies:</strong> {countryDetails.currencies.join(', ')}</p>
-          <p><strong>Languages:</strong> {countryDetails.languages.join(', ')}</p>
-          <img src={countryDetails.flag} alt={`${countryDetails.name} flag`} style={{ width: '100px' }} />
+          {countryDetails && (
+            <div style={{ marginTop: '20px' }}>
+              <h3>Country Details:</h3>
+              <p><strong>Name:</strong> {countryDetails.name}</p>
+              <p><strong>Capital:</strong> {countryDetails.capital}</p>
+              <p><strong>Currencies:</strong> {countryDetails.currencies.join(', ')}</p>
+              <p><strong>Languages:</strong> {countryDetails.languages.join(', ')}</p>
+              <img src={countryDetails.flag} alt={`${countryDetails.name} flag`} style={{ width: '100px' }} />
+            </div>
+          )}
         </div>
-      )}
+
+        {/* Add a logout button */}
+        <button onClick={logoutAndClearApiKey} style={{ marginTop: '20px' }}>
+          Logout
+        </button>
       </div>
-    </div>
     </div>
   );
 };
