@@ -1,19 +1,27 @@
 import React from 'react';
-import { Link } from 'react-router-dom';  // Import Link for navigation
+import { Link } from 'react-router-dom'; 
+import './css/home.css';
+import countryImage from '../assets/images/country.jpg';  // Adjust the path to your image
 
 const Home = () => {
     return (
-        <div style={{ textAlign: 'center', padding: '50px' }}>
-            <h1>Welcome to My Application</h1>
-            <p>This is a simple application to manage countries and user authentication.</p>
+        <div className='home-container'>
             <div>
-                <Link to="/login" style={{ margin: '10px', textDecoration: 'none', color: 'blue' }}>
+                <h1>SecureCountryAPI</h1>
+                <p>This is a simple application to manage countries and user authentication.</p>
+            </div>
+
+            <div className='home-image'>
+                <img src={countryImage} alt="Home" className="home-img" />
+            </div>
+
+            <div className="links-container">
+                <Link to="/login" className="link-button login-button">
                     Login
                 </Link>
-                <Link to="/register" style={{ margin: '10px', textDecoration: 'none', color: 'blue' }}>
+                <Link to="/register" className="link-button register-button">
                     Register
                 </Link>
-                
             </div>
         </div>
     );
