@@ -2,12 +2,15 @@ const express = require('express');
 const session=require('express-session');
 require('dotenv').config();
 const db = require('./config/db'); // Import the database connection
+const cors = require('cors'); // Import CORS
 const authRoutes = require('./routes/authRoutes');
 const countryRoutes = require('./routes/countryRoutes');
 const apiKeyRoutes = require('./routes/apiKeyRoutes');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
+// Enable CORS for all routes (before your routes)
+app.use(cors());
 
 app.use(express.json());
 app.use(session({

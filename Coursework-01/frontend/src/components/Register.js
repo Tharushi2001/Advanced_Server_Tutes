@@ -1,19 +1,42 @@
-// src/components/Register.js
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate for redirection
+import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate(); // Hook to navigate after registration
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Handle registration logic (e.g., send registration data to the server)
-        alert(`Username: ${username}, Password: ${password}`);
-        
-        // Redirect to the login page after successful registration
-        navigate('/login');
+
+        const data = {
+            username: username,
+            password: password
+        };
+
+        try {
+            // Send registration data to backend
+            const response = await fetch('http://localhost:3001/api/auth/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                // If registration is successful, navigate to login page
+                alert('Registration successful!');
+                navigate('/login');
+            } else {
+                alert(`Error: ${result.error || 'Something went wrong!'}`);
+            }
+        } catch (error) {
+            console.error('Error during registration:', error);
+            alert('An error occurred during registration.');
+        }
     };
 
     return (
