@@ -4,6 +4,7 @@ require('dotenv').config();
 const db = require('./config/db'); // Import the database connection
 const authRoutes = require('./routes/authRoutes');
 const countryRoutes = require('./routes/countryRoutes');
+const apiKeyRoutes = require('./routes/apiKeyRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -23,6 +24,7 @@ app.use(session({
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/countries', countryRoutes); // Use country routes
+app.use('/api/apikeys', apiKeyRoutes); // API key routes
 
 // Start the server
 app.listen(PORT, () => {

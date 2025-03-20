@@ -27,13 +27,43 @@ class ApiKeyController {
 
   static async revokeApiKey(req, res) {
     const { id } = req.params;
-
+    const userId = req.userId; // Get the user ID from the request
+  
     try {
-      const deletedRows = await ApiKeyDao.deleteApiKey(id);
-      if (deletedRows === 0) {
+      // Check if the API key belongs to the authenticated user
+      const apiKey = await ApiKeyDao.getApiKeyById(id); // Fetch the key by ID
+  
+      if (!apiKey) {
         return res.status(404).json({ message: 'API key not found' });
       }
+  
+      if (apiKey.user_id !== userId) {
+        return res.status(403).json({ message: 'You can only delete your own API keys' });
+      }
+  
+      const deletedRows = await ApiKeyDao.deleteApiKey(id); // Delete the API key by its ID
+      if (deletedRows === 0) {
+        return res.status(404).json({ message: 'Failed to delete API key' });
+      }
+  
       res.json({ message: 'API key revoked successfully' });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+  
+  // Update API key
+  static async updateApiKey(req, res) {
+    const { id } = req.params;
+    const userId = req.userId; // Get user ID from the request (set by AuthMiddleware)
+    const newApiKey = crypto.randomBytes(32).toString('hex'); // Generate new API key
+
+    try {
+      const updatedRows = await ApiKeyDao.updateApiKey(id, newApiKey, userId);
+      if (updatedRows === 0) {
+        return res.status(404).json({ message: 'API key not found or not authorized to update' });
+      }
+      res.json({ message: 'API key updated successfully', apiKey: newApiKey });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }

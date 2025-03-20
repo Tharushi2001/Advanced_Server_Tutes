@@ -19,21 +19,36 @@ class ApiKeyDao {
     });
   }
 
-  static deleteApiKeyByUserId(userId) {
+  static deleteApiKey(id) {
     return new Promise((resolve, reject) => {
-      db.query('DELETE FROM api_keys WHERE id = ?', [userId], (err, results) => {
+      db.query('DELETE FROM api_keys WHERE id = ?', [id], (err, results) => {
         if (err) return reject(err);
-        resolve(results.affectedRows);
+        resolve(results.affectedRows); // This will give the number of rows deleted
       });
     });
   }
+  
 
-  static getApiKeyByKey(key) {
+  static getApiKeyById(id) {
     return new Promise((resolve, reject) => {
-      db.query('SELECT * FROM api_keys WHERE `key` = ?', [key], (err, results) => {
+      db.query('SELECT * FROM api_keys WHERE id = ?', [id], (err, results) => {
         if (err) return reject(err);
-        resolve(results[0]);
+        resolve(results[0]); // Return the first result, or null if not found
       });
+    });
+  }
+  
+
+  static updateApiKey(id, newKey, userId) {
+    return new Promise((resolve, reject) => {
+      db.query(
+        'UPDATE api_keys SET `key` = ? WHERE id = ? AND user_id = ?',
+        [newKey, id, userId],
+        (err, results) => {
+          if (err) return reject(err);
+          resolve(results.affectedRows);
+        }
+      );
     });
   }
 }
