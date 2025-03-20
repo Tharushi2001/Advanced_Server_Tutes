@@ -70,7 +70,7 @@ const Dashboard = () => {
 
       <div className='apigenerate'>
 
-      <button className='key-btn' style={{  padding: '10px', borderRadius: '8px', backgroundColor: 'white', color: 'Black', border: '1px solid' }}
+      <button className='key-btn' style={{  padding: '10px', borderRadius: '20px', backgroundColor: '#3674B5', color: 'white', border: '1px solid' }}
         onClick={fetchApiKey} disabled={loading}>
         {loading ? 'Loading...' : 'Get My API Key'}
       
@@ -94,8 +94,9 @@ const Dashboard = () => {
           onChange={(e) => setCountryName(e.target.value)}
           required
         />
-        <button type="submit">Get Country Details</button>
+        <button type="submit"  className="search-btn">Get Country Details</button>
       </form>
+
 
       {countryDetails && (
         <div style={{ marginTop: '20px' }}>
