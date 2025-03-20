@@ -61,18 +61,7 @@ class ApiKeyDao {
     });
   }
 
-  static updateApiKey(id, newKey, userId) {
-    return new Promise((resolve, reject) => {
-      db.query(
-        'UPDATE api_keys SET `key` = ? WHERE id = ? AND user_id = ?',
-        [newKey, id, userId],
-        (err, results) => {
-          if (err) return reject(err);
-          resolve(results.affectedRows);
-        }
-      );
-    });
-  }
+
 }
 
 module.exports = ApiKeyDao;
