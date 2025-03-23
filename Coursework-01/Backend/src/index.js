@@ -7,6 +7,7 @@ const authRoutes = require('./routes/authRoutes');
 const countryRoutes = require('./routes/countryRoutes');
 const apiKeyRoutes = require('./routes/apiKeyRoutes');
 
+
 const app = express();
 const PORT = process.env.PORT || 3001;
 // Enable CORS for all routes (before your routes)
