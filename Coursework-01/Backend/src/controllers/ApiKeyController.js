@@ -13,29 +13,7 @@ class ApiKeyController {
       res.status(500).json({ error: error.message });
     }
   }
-  // static async getApiKey(req, res) {
-  //   const userId = req.userId; // Get the user ID from the request (set by AuthMiddleware)
-  
-  //   try {
-  //     // Fetch the most recent API key based on the highest ID (assuming id is auto-incremented)
-  //     const apiKeys = await ApiKeyDao.getApiKeysByUserId(userId);
-  
-  //     if (!apiKeys || apiKeys.length === 0) {
-  //       return res.status(404).json({ message: 'No API keys found for this user' });
-  //     }
-  
-  //     // Find the API key with the highest ID (most recent)
-  //     const userApiKey = apiKeys.reduce((latest, current) => {
-  //       return (current.id > latest.id) ? current : latest;
-  //     });
-  
-  //     // Return the most recent API key
-  //     res.json({ apiKey: userApiKey.key });
-  //   } catch (error) {
-  //     res.status(500).json({ error: error.message });
-  //   }
-  // }
-
+ 
   // In ApiKeyController.js
   static async getApiKey(req, res) {
   const userId = req.userId; // Get the user ID from the authenticated user (set by your AuthMiddleware)
