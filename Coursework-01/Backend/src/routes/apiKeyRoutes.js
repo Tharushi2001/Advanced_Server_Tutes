@@ -4,10 +4,10 @@ const ApiKeyController = require('../controllers/ApiKeyController');
 
 const router = express.Router();
 
-// Protect these routes with authentication middleware
 
 
-// Generate API key (No authentication, only API key validation needed)
+
+// Generate API key 
 router.post('/generate', ApiKeyController.generateApiKey); 
 
 router.get('/getkey',ApiKeyMiddleware.validateApiKey, ApiKeyController.getApiKey);
