@@ -29,20 +29,16 @@ class CountryController {
   }
 
   static async getCountryByName(req, res) {
-    const { name } = req.params; // Get the country name from the request parameters
-
+    const { name } = req.params;
+  
     try {
-      // Fetch country data from the RestCountries API
-      const response = await axios.get('https://restcountries.com/v3.1/all');
-
-      // Find the country that matches the provided name
-      const country = response.data.find(country => country.name.common.toLowerCase() === name.toLowerCase());
-
+      const response = await axios.get(`https://restcountries.com/v3.1/name/${name}`);
+      const country = response.data[0];
+  
       if (!country) {
         return res.status(404).json({ error: 'Country not found' });
       }
-
-      // Map the country data to the desired format
+  
       const countryDetails = {
         name: country.name.common,
         capital: country.capital ? country.capital[0] : null,
@@ -50,18 +46,16 @@ class CountryController {
         languages: country.languages ? Object.values(country.languages) : [],
         flag: country.flags.svg
       };
-
-      // Log the action
-      await LogDao.createLog(req.userId, 'Fetched country details', `User  fetched details for ${name}.`);
-
-      // Send the response with the country details
+  
+      await LogDao.createLog(req.userId, 'Fetched country details', `User fetched details for ${name}.`);
+  
       res.json(countryDetails);
     } catch (error) {
-      // Handle errors from the API call
       console.error('Error fetching country details:', error.message);
       res.status(500).json({ error: 'Failed to fetch country details. Please try again later.' });
     }
   }
+  
 }
 
 module.exports = CountryController;
