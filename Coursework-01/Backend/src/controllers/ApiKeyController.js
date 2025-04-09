@@ -16,23 +16,21 @@ class ApiKeyController {
  
   // In ApiKeyController.js
   static async getApiKey(req, res) {
-  const userId = req.userId; // Get the user ID from the authenticated user (set by your AuthMiddleware)
-
-  try {
-    // Fetch the latest API key for the authenticated user
-    const apiKey = await ApiKeyDao.getLatestApiKeyByUserId(userId);  // Your database query logic
-
-    if (!apiKey) {
-      return res.status(404).json({ message: 'No API key found for this user' });
+    const userId = req.userId;
+  
+    try {
+      const apiKey = await ApiKeyDao.getLatestApiKeyByUserId(userId);
+  
+      if (!apiKey) {
+        return res.status(404).json({ message: 'No API key found for this user' });
+      }
+  
+      res.json({ id: apiKey.id, apiKey: apiKey.key });  // ✅ Send both ID and key
+    } catch (error) {
+      res.status(500).json({ error: error.message });
     }
-
-    // Send the API key in the response
-    res.json({ apiKey: apiKey.key });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
   }
-};
-
+  
   static async revokeApiKey(req, res) {
     const { id } = req.params;
     const userId = req.userId; // Get the user ID from the request

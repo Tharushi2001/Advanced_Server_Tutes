@@ -46,6 +46,39 @@ const Dashboard = () => {
     }
   };
 
+  const updateApiKey = async () => {
+    setLoading(true);
+    setError(null);
+  
+    try {
+      const apiKey = localStorage.getItem('apiKey');
+      if (!apiKey) {
+        setError('API key is not available. Please login again.');
+        setLoading(false);
+        return;
+      }
+  
+      // Send a PUT request to update the API key
+      const response = await axios.put('http://localhost:3001/api/apikeys/update/your-key-id', {
+        // if body is required, add here
+      }, {
+        headers: {
+          'x-api-key': apiKey,
+        },
+      });
+  
+      // Update the localStorage and state with new API key
+      const newKey = response.data.apiKey;
+      localStorage.setItem('apiKey', newKey);
+      setApiKey(newKey);
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to update API key');
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+
   // Function to fetch country details
   const fetchCountryDetails = async (e) => {
     e.preventDefault();
@@ -83,6 +116,23 @@ const Dashboard = () => {
           >
             {loading ? 'Loading...' : 'Get My API Key'}
           </button>
+
+           {/* ✅ Update API Key Button */}
+  <button
+    className='key-btn'
+    style={{
+      padding: '10px',
+      borderRadius: '20px',
+      backgroundColor: '#4CAF50',
+      color: 'white',
+      border: '1px solid'
+    }}
+    onClick={updateApiKey}
+    disabled={loading}
+  >
+    {loading ? 'Updating...' : 'Update API Key'}
+  </button>
+
 
           {error && <p style={{ color: 'red' }}>{error}</p>}
 
