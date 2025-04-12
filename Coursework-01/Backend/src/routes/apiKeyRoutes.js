@@ -15,9 +15,7 @@ router.get('/getkey',ApiKeyMiddleware.validateApiKey, ApiKeyController.getApiKey
 // Update API key (Requires valid API key)
 router.put('/update/:id', ApiKeyMiddleware.validateApiKey, ApiKeyController.updateApiKey);
 
-
-// Revoke API key (Requires valid API key)
-router.delete('/:id', ApiKeyMiddleware.validateApiKey, ApiKeyController.revokeApiKey);
+router.delete('/delete/:id', ApiKeyMiddleware.validateApiKey, ApiKeyController.deleteApiKey);
 
 
 

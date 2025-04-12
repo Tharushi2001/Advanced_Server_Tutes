@@ -4,41 +4,41 @@ import './css/country.css';
 
 const Dashboard = () => {
   const [apiKey, setApiKey] = useState(null);
+  const [apiKeyId, setApiKeyId] = useState(null); // ✅ Store API key ID
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [countryName, setCountryName] = useState('');
   const [countryDetails, setCountryDetails] = useState(null);
 
-  // Function to logout and clear API key
+  // Logout and clear API key
   const logoutAndClearApiKey = () => {
-    localStorage.removeItem('apiKey');  // Remove the API key from localStorage
-    setApiKey(null);  // Clear the API key from the state
+    localStorage.removeItem('apiKey');
+    setApiKey(null);
+    setApiKeyId(null);
   };
 
-  // Function to fetch the current API key
+  // Fetch current API key
   const fetchApiKey = async () => {
     setLoading(true);
     setError(null);
 
     try {
-      // Get the user's API key from localStorage
-      const apiKey = localStorage.getItem('apiKey');
+      const localKey = localStorage.getItem('apiKey');
 
-      if (!apiKey) {
+      if (!localKey) {
         setError('API key is not available. Please login again.');
         setLoading(false);
         return;
       }
 
-      // Make a request to the backend to fetch the latest API key for the logged-in user
       const response = await axios.get('http://localhost:3001/api/apikeys/getkey', {
         headers: {
-          'x-api-key': apiKey, // Include the API key in the request header for authentication
+          'x-api-key': localKey,
         },
       });
 
-      // Set the API key to state
       setApiKey(response.data.apiKey);
+      setApiKeyId(response.data.id); // ✅ Store the key ID
     } catch (err) {
       setError('Failed to fetch the API key');
     } finally {
@@ -46,40 +46,39 @@ const Dashboard = () => {
     }
   };
 
+  // Update API key
   const updateApiKey = async () => {
     setLoading(true);
     setError(null);
-  
+
     try {
-      const apiKey = localStorage.getItem('apiKey');
-      if (!apiKey) {
-        setError('API key is not available. Please login again.');
+      const currentKey = localStorage.getItem('apiKey');
+
+      if (!currentKey || !apiKeyId) {
+        setError('Missing API key or key ID. Please try again.');
         setLoading(false);
         return;
       }
-  
-      // Send a PUT request to update the API key
-      const response = await axios.put('http://localhost:3001/api/apikeys/update/your-key-id', {
-        // if body is required, add here
-      }, {
+
+      const response = await axios.put(`http://localhost:3001/api/apikeys/update/${apiKeyId}`, {}, {
         headers: {
-          'x-api-key': apiKey,
+          'x-api-key': currentKey,
         },
       });
-  
-      // Update the localStorage and state with new API key
+
       const newKey = response.data.apiKey;
       localStorage.setItem('apiKey', newKey);
       setApiKey(newKey);
+      // Refresh API key ID by refetching
+      fetchApiKey();
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to update API key');
     } finally {
       setLoading(false);
     }
   };
-  
 
-  // Function to fetch country details
+  // Fetch country details
   const fetchCountryDetails = async (e) => {
     e.preventDefault();
     setError(null);
@@ -88,16 +87,17 @@ const Dashboard = () => {
     try {
       const response = await axios.get(`http://localhost:3001/api/countries/${countryName}`, {
         headers: {
-          'x-api-key': apiKey, // Use the fetched API key for authentication
+          'x-api-key': apiKey,
         },
       });
+
       setCountryDetails(response.data);
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to fetch country details. Please try again.');
     }
   };
 
-  // UseEffect to fetch the API key when the component mounts
+  // Fetch API key on component mount
   useEffect(() => {
     fetchApiKey();
   }, []);
@@ -117,22 +117,61 @@ const Dashboard = () => {
             {loading ? 'Loading...' : 'Get My API Key'}
           </button>
 
-           {/* ✅ Update API Key Button */}
+          {/* ✅ Update API Key Button */}
+          <button
+            className='key-btn'
+            style={{ padding: '10px', borderRadius: '20px', backgroundColor: '#4CAF50', color: 'white', border: '1px solid' }}
+            onClick={updateApiKey}
+            disabled={loading}
+          >
+            {loading ? 'Updating...' : 'Update API Key'}
+          </button>
+
+
+
+  {/* ✅ Delete API Key Button */}
   <button
     className='key-btn'
     style={{
       padding: '10px',
       borderRadius: '20px',
-      backgroundColor: '#4CAF50',
+      backgroundColor: '#E53935',
       color: 'white',
-      border: '1px solid'
+      border: '1px solid',
     }}
-    onClick={updateApiKey}
+    onClick={async () => {
+      setError(null);
+      setLoading(true);
+      try {
+        const currentKey = localStorage.getItem('apiKey');
+        if (!currentKey || !apiKeyId) {
+          setError('Missing API key or key ID. Please try again.');
+          setLoading(false);
+          return;
+        }
+
+        await axios.delete(`http://localhost:3001/api/apikeys/delete/${apiKeyId}`, {
+          headers: {
+            'x-api-key': currentKey,
+          },
+        });
+
+        localStorage.removeItem('apiKey');
+        setApiKey(null);
+        setApiKeyId(null);
+        alert('API Key deleted successfully.');
+      } catch (err) {
+        setError(err.response?.data?.message || 'Failed to delete API key');
+      } finally {
+        setLoading(false);
+      }
+    }}
     disabled={loading}
   >
-    {loading ? 'Updating...' : 'Update API Key'}
+    {loading ? 'Deleting...' : 'Delete API Key'}
   </button>
-
+          
+          
 
           {error && <p style={{ color: 'red' }}>{error}</p>}
 
@@ -168,7 +207,6 @@ const Dashboard = () => {
           )}
         </div>
 
-        {/* Add a logout button */}
         <button onClick={logoutAndClearApiKey} style={{ marginTop: '20px' }}>
           Logout
         </button>

@@ -32,17 +32,6 @@ class ApiKeyDao {
     });
   }
   
-
-  static deleteApiKey(id) {
-    return new Promise((resolve, reject) => {
-      db.query('DELETE FROM api_keys WHERE id = ?', [id], (err, results) => {
-        if (err) return reject(err);
-        resolve(results.affectedRows); // This will give the number of rows deleted
-      });
-    });
-  }
-  
-
   static getApiKeyById(id) {
     return new Promise((resolve, reject) => {
       db.query('SELECT * FROM api_keys WHERE id = ?', [id], (err, results) => {
@@ -73,6 +62,21 @@ class ApiKeyDao {
       );
     });
   }
+
+  static deleteApiKey(id, userId) {
+    return new Promise((resolve, reject) => {
+      db.query(
+        'DELETE FROM api_keys WHERE id = ? AND user_id = ?',
+        [id, userId],
+        (err, results) => {
+          if (err) return reject(err);
+          resolve(results.affectedRows); // Number of deleted rows
+        }
+      );
+    });
+  }
+  
+  
   
 
 
