@@ -50,28 +50,39 @@ class AuthController {
     }
   }
 
-  static async logout(req, res) {   // User logout endpoint
+  static async logout(req, res) {
     try {
-      console.log('Session at logout:', req.session);
-
-      if (!req.session.userId) { // Check if a user is logged in
+      console.log('Session at logout:', req.session); // Log the session for debugging
+      
+      if (!req.session.userId) {
         return res.status(400).json({ message: 'User is not logged in' });
       }
-
+  
+      // Log the logout action
       await LogDao.createLog(req.session.userId, 'User logged out', `User with ID ${req.session.userId} logged out successfully.`);
-
-      req.session.destroy(err => { // Destroy session
+      
+      req.session.destroy((err) => {
         if (err) {
+          console.error('Session destroy error:', err);
           return res.status(500).json({ error: 'Could not log out. Please try again.' });
         }
-
-        res.clearCookie('connect.sid');
-        res.json({ message: 'User logged out successfully.' });
+  
+        
+        res.clearCookie('connect.sid', { path: '/', httpOnly: true }); 
+  
+        console.log('Session destroyed and cookie cleared.');
+        
+        return res.json({ message: 'User logged out successfully.' });
       });
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      console.error('Logout error:', error);
+      return res.status(500).json({ error: error.message });
     }
   }
+  
+  
+  
+  
 }
 
 module.exports = AuthController;

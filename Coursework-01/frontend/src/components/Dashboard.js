@@ -3,8 +3,7 @@ import axios from 'axios';
 import './css/country.css';
 import { useNavigate } from 'react-router-dom';
 
-
-const Dashboard = () => {    // Dashboard component to manage API key and retrieve country data
+const Dashboard = () => {
   const [apiKey, setApiKey] = useState(null);
   const [apiKeyId, setApiKeyId] = useState(null); 
   const [loading, setLoading] = useState(false);
@@ -13,15 +12,6 @@ const Dashboard = () => {    // Dashboard component to manage API key and retrie
   const [countryDetails, setCountryDetails] = useState(null);
   const navigate = useNavigate();
 
-
-  // Logout and clear API key
-  const logoutAndClearApiKey = () => {
-    localStorage.removeItem('apiKey');
-    setApiKey(null);
-    setApiKeyId(null);
-    navigate('/');
-  };
-
   // Fetch current API key
   const fetchApiKey = async () => {
     setLoading(true);
@@ -29,7 +19,6 @@ const Dashboard = () => {    // Dashboard component to manage API key and retrie
 
     try {
       const localKey = localStorage.getItem('apiKey');
-
       if (!localKey) {
         setError('API key is not available. Please login again.');
         setLoading(false);
@@ -37,13 +26,11 @@ const Dashboard = () => {    // Dashboard component to manage API key and retrie
       }
 
       const response = await axios.get('http://localhost:3001/api/apikeys/getkey', {
-        headers: {
-          'x-api-key': localKey,
-        },
+        headers: { 'x-api-key': localKey },
       });
 
       setApiKey(response.data.apiKey);
-      setApiKeyId(response.data.id); //  Store the key ID
+      setApiKeyId(response.data.id); // Store the key ID
     } catch (err) {
       setError('Failed to fetch the API key');
     } finally {
@@ -58,7 +45,6 @@ const Dashboard = () => {    // Dashboard component to manage API key and retrie
 
     try {
       const currentKey = localStorage.getItem('apiKey');
-
       if (!currentKey || !apiKeyId) {
         setError('Missing API key or key ID. Please try again.');
         setLoading(false);
@@ -66,15 +52,12 @@ const Dashboard = () => {    // Dashboard component to manage API key and retrie
       }
 
       const response = await axios.put(`http://localhost:3001/api/apikeys/update/${apiKeyId}`, {}, {
-        headers: {
-          'x-api-key': currentKey,
-        },
+        headers: { 'x-api-key': currentKey },
       });
 
       const newKey = response.data.apiKey;
       localStorage.setItem('apiKey', newKey);
       setApiKey(newKey);
-      // Refresh API key ID by refetching
       fetchApiKey();
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to update API key');
@@ -91,14 +74,28 @@ const Dashboard = () => {    // Dashboard component to manage API key and retrie
 
     try {
       const response = await axios.get(`http://localhost:3001/api/countries/${countryName}`, {
-        headers: {
-          'x-api-key': apiKey,
-        },
+        headers: { 'x-api-key': apiKey },
       });
-
       setCountryDetails(response.data);
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to fetch country details. Please try again.');
+    }
+  };
+
+  // Logout and clear API key
+  const logoutAndClearApiKey = async () => {
+    try {
+      await axios.post('http://localhost:3001/api/auth/logout', {}, {
+        withCredentials: true, 
+      });
+
+      localStorage.removeItem('apiKey');
+      setApiKey(null);
+      setApiKeyId(null);
+      navigate('/');  // Redirect to the homepage after logout
+    } catch (err) {
+      console.error('Logout failed:', err.response?.data?.message || err.message);
+      setError('Logout failed. Please try again.');
     }
   };
 
@@ -122,7 +119,6 @@ const Dashboard = () => {    // Dashboard component to manage API key and retrie
             {loading ? 'Loading...' : 'Get My API Key'}
           </button>
 
-          {/*Update API Key Button */}
           <button
             className='key-btn'
             style={{ padding: '10px', borderRadius: '20px', backgroundColor: '#4CAF50', color: 'white', border: '1px solid' }}
@@ -132,51 +128,44 @@ const Dashboard = () => {    // Dashboard component to manage API key and retrie
             {loading ? 'Updating...' : 'Update API Key'}
           </button>
 
+          <button
+            className='key-btn'
+            style={{
+              padding: '10px',
+              borderRadius: '20px',
+              backgroundColor: '#E53935',
+              color: 'white',
+              border: '1px solid',
+            }}
+            onClick={async () => {
+              setError(null);
+              setLoading(true);
+              try {
+                const currentKey = localStorage.getItem('apiKey');
+                if (!currentKey || !apiKeyId) {
+                  setError('Missing API key or key ID. Please try again.');
+                  setLoading(false);
+                  return;
+                }
 
+                await axios.delete(`http://localhost:3001/api/apikeys/delete/${apiKeyId}`, {
+                  headers: { 'x-api-key': currentKey },
+                });
 
-  {/* Delete API Key Button */}
-  <button
-    className='key-btn'
-    style={{
-      padding: '10px',
-      borderRadius: '20px',
-      backgroundColor: '#E53935',
-      color: 'white',
-      border: '1px solid',
-    }}
-    onClick={async () => {
-      setError(null);
-      setLoading(true);
-      try {
-        const currentKey = localStorage.getItem('apiKey');
-        if (!currentKey || !apiKeyId) {
-          setError('Missing API key or key ID. Please try again.');
-          setLoading(false);
-          return;
-        }
-
-        await axios.delete(`http://localhost:3001/api/apikeys/delete/${apiKeyId}`, {
-          headers: {
-            'x-api-key': currentKey,
-          },
-        });
-
-        localStorage.removeItem('apiKey');
-        setApiKey(null);
-        setApiKeyId(null);
-        alert('API Key deleted successfully.');
-      } catch (err) {
-        setError(err.response?.data?.message || 'Failed to delete API key');
-      } finally {
-        setLoading(false);
-      }
-    }}
-    disabled={loading}
-  >
-    {loading ? 'Deleting...' : 'Delete API Key'}
-  </button>
-          
-          
+                localStorage.removeItem('apiKey');
+                setApiKey(null);
+                setApiKeyId(null);
+                alert('API Key deleted successfully.');
+              } catch (err) {
+                setError(err.response?.data?.message || 'Failed to delete API key');
+              } finally {
+                setLoading(false);
+              }
+            }}
+            disabled={loading}
+          >
+            {loading ? 'Deleting...' : 'Delete API Key'}
+          </button>
 
           {error && <p style={{ color: 'red' }}>{error}</p>}
 

@@ -35,7 +35,7 @@ const Login = () => {
             const result = await response.json();
 
             if (response.ok) {
-                // Store the token in localStorage/sessionStorage
+                // Store the token in sessionStorage
                 console.log('Setting API key:', result.apiKey); // Log the API key
                 localStorage.setItem('apiKey', result.apiKey);
 

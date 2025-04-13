@@ -11,7 +11,11 @@ const apiKeyRoutes = require('./routes/apiKeyRoutes');
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:3000', // frontend origin
+  credentials: true // allow cookies
+}));
+
 
 app.use(express.json());
 app.use(session({
