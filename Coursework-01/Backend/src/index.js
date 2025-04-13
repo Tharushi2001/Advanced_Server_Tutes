@@ -1,8 +1,8 @@
 const express = require('express');
 const session=require('express-session');
 require('dotenv').config();
-const db = require('./config/db'); // Import the database connection
-const cors = require('cors'); // Import CORS
+const db = require('./config/db'); 
+const cors = require('cors');
 const authRoutes = require('./routes/authRoutes');
 const countryRoutes = require('./routes/countryRoutes');
 const apiKeyRoutes = require('./routes/apiKeyRoutes');
@@ -10,7 +10,7 @@ const apiKeyRoutes = require('./routes/apiKeyRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
-// Enable CORS for all routes (before your routes)
+
 app.use(cors());
 
 app.use(express.json());
@@ -26,7 +26,7 @@ app.use(session({
   }));
 
 // Routes
-app.use('/api/auth', authRoutes);
+app.use('/api/auth', authRoutes);//Use auth routes
 app.use('/api/countries', countryRoutes); // Use country routes
 app.use('/api/apikeys', apiKeyRoutes); // API key routes
 

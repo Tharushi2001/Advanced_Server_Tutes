@@ -5,8 +5,6 @@ const ApiKeyController = require('../controllers/ApiKeyController');
 const router = express.Router();
 
 
-
-
 // Generate API key 
 router.post('/generate', ApiKeyController.generateApiKey); 
 

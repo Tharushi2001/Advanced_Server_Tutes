@@ -1,8 +1,8 @@
 const ApiKeyDao = require('../dao/ApiKeyDao');
 
-class ApiKeyMiddleware {
+class ApiKeyMiddleware {   // Middleware to validate API key from request header
   static async validateApiKey(req, res, next) {
-    const apiKey = req.headers['x-api-key']; // Expecting the API key in the headers
+    const apiKey = req.headers['x-api-key']; // Custom header to pass API key
 
     if (!apiKey) {
       return res.status(403).json({ message: 'No API key provided' });

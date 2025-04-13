@@ -1,9 +1,9 @@
 .home-container {
     text-align: center;
     padding: 50px;
-    background-color: #083769; /* Blue background */
-    color: white; /* White text */
-    min-height: 100vh; /* Full height */
+    background-color: #083769; 
+    color: white; 
+    min-height: 100vh; 
 }
 
 .home-container a {
@@ -23,14 +23,14 @@
 }
 .links-container {
     display: flex;
-    justify-content: center; /* Center buttons horizontally */
-    gap: 20px; /* Space between the buttons */
+    justify-content: center; 
+    gap: 20px; 
     margin-top: 20px;
 }
 
 .link-button {
     padding: 12px 24px;
-    border-radius: 50px; /* Fully rounded */
+    border-radius: 50px; 
     color: white;
     font-weight: bold;
     text-decoration: none;

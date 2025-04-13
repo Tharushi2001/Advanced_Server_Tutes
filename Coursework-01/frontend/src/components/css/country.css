@@ -1,24 +1,23 @@
 /* Style for the Dashboard Container */
 .dashboard-Container {
     background-color:#578FCA;
-    color: rgb(255, 255, 255); /* White text */
+    color: rgb(255, 255, 255); 
     width: 100%;
     min-height: 98vh;
     display: flex;
-    justify-content: center; /* Centers content horizontally */
-    align-items: center; /* Centers content vertically */
+    justify-content: center; 
+    align-items: center; 
     padding: 0;
 }
 
-/* Style for the content section inside the dashboard */
 .content {
     padding: 20px;
     margin: 30px;
-    background-color:#3674B5; /* Optional: add a background to make the content stand out */
-    color: #ffffff; /* Dark text to contrast the background */
-    border-radius: 8px; /* Optional: add some rounding to the content box */
-    width: 80%; /* You can adjust this as per your layout */
-    max-width: 1000px; /* Optional: max width to prevent content from becoming too wide */
+    background-color:#3674B5; 
+    color: #ffffff; 
+    border-radius: 8px;
+    width: 80%; 
+    max-width: 1000px; 
 }
 
 .apigenerate{
@@ -34,49 +33,48 @@
     color: black;
     padding: 20px;
 }
-/* Style for the input field */
+
 .search-input {
-    width: 100%; /* Full width */
-    padding: 10px; /* Padding inside the input */
-    font-size: 16px; /* Font size */
-    border: 2px solid #ccc; /* Border color */
-    border-radius: 5px; /* Rounded corners */
-    margin-right: 10px; /* Space between the input and button */
-    box-sizing: border-box; /* Makes sure padding doesn't affect width */
+    width: 100%; 
+    padding: 10px; 
+    font-size: 16px;
+    border: 2px solid #ccc; 
+    border-radius: 5px; 
+    margin-right: 10px; 
+    box-sizing: border-box; 
   }
   
-  /* Style for the placeholder text */
+
   .search-input::placeholder {
-    color: #f6f0f0; /* Placeholder color */
-    font-style: italic; /* Italicize placeholder text */
-    opacity: 1; /* Ensure the placeholder is fully opaque */
+    color: #f6f0f0; 
+    font-style: italic; 
+    opacity: 1; 
   }
   
-  /* Style for the submit button */
+
   .search-btn {
     padding: 10px 10px; 
     background-color:#3674B5;
-    color: white; /* White text */
-    border: none; /* Remove border */
-    border-radius: 20px; /* Rounded corners */
-    font-size: 13px; /* Font size */
-    cursor: pointer; /* Pointer cursor on hover */
+    color: white; 
+    border: none;
+    border-radius: 20px; 
+    font-size: 13px; 
+    cursor: pointer; 
     margin-left: 10px;
   }
   
-  /* Button hover effect */
   .search-btn:hover {
-    background-color: #4582a0; /* Darker green on hover */
+    background-color: #4582a0; 
   }
   
   .country-details {
     display: flex;
-    flex-direction: column;  /* Arrange children vertically */
-    justify-content: center; /* Center the content vertically */
-    align-items: center;     /* Center the content horizontally */
-        /* Use the full height of the viewport */
-    text-align: center;      /* Ensure text is centered */
+    flex-direction: column;  
+    justify-content: center; 
+    align-items: center;  
+    
+    text-align: center;      
 
-    padding: 20px;           /* Add padding for spacing */
+    padding: 20px;         
   }
   

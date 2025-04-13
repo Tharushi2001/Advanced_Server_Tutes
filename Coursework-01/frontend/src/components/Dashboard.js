@@ -1,20 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './css/country.css';
+import { useNavigate } from 'react-router-dom';
 
-const Dashboard = () => {
+
+const Dashboard = () => {    // Dashboard component to manage API key and retrieve country data
   const [apiKey, setApiKey] = useState(null);
-  const [apiKeyId, setApiKeyId] = useState(null); // ✅ Store API key ID
+  const [apiKeyId, setApiKeyId] = useState(null); 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [countryName, setCountryName] = useState('');
   const [countryDetails, setCountryDetails] = useState(null);
+  const navigate = useNavigate();
+
 
   // Logout and clear API key
   const logoutAndClearApiKey = () => {
     localStorage.removeItem('apiKey');
     setApiKey(null);
     setApiKeyId(null);
+    navigate('/');
   };
 
   // Fetch current API key
@@ -38,7 +43,7 @@ const Dashboard = () => {
       });
 
       setApiKey(response.data.apiKey);
-      setApiKeyId(response.data.id); // ✅ Store the key ID
+      setApiKeyId(response.data.id); //  Store the key ID
     } catch (err) {
       setError('Failed to fetch the API key');
     } finally {
@@ -117,7 +122,7 @@ const Dashboard = () => {
             {loading ? 'Loading...' : 'Get My API Key'}
           </button>
 
-          {/* ✅ Update API Key Button */}
+          {/*Update API Key Button */}
           <button
             className='key-btn'
             style={{ padding: '10px', borderRadius: '20px', backgroundColor: '#4CAF50', color: 'white', border: '1px solid' }}
@@ -129,7 +134,7 @@ const Dashboard = () => {
 
 
 
-  {/* ✅ Delete API Key Button */}
+  {/* Delete API Key Button */}
   <button
     className='key-btn'
     style={{

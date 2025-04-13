@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import './css/home.css';
 import countryImage from '../assets/images/country.jpg';  
 
-const Home = () => {
+const Home = () => {  // Home component displaying welcome message, image, and navigation links
     return (
         <div className='home-container'>
             <div>

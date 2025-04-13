@@ -5,8 +5,7 @@ import './css/login.css';
 const Register = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const navigate = useNavigate(); // Hook to navigate after registration
-
+    const navigate = useNavigate(); 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
