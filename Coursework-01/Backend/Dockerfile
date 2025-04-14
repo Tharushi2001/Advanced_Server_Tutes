@@ -1,4 +1,4 @@
-# Use Node.js v22.13.0
+
 FROM node:22.13.0
 
 WORKDIR /app
@@ -10,8 +10,10 @@ RUN npm install
 # Copy backend source code
 COPY . .
 
+
+
 # Expose the port your backend uses
 EXPOSE 3001
 
 # Start the backend server
-CMD ["node", "index.js"]
+CMD ["node", "src/index.js"]
