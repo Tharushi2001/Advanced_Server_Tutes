@@ -23,7 +23,7 @@ class ApiKeyDao {
     });
   }
 
-  static getApiKeyByKey(key) {    // Delete a specific API key for a user
+  static getApiKeyByKey(key) {    // fetch an API key using the key string
     return new Promise((resolve, reject) => {
       db.query('SELECT * FROM api_keys WHERE `key` = ?', [key], (err, results) => {
         if (err) return reject(err);

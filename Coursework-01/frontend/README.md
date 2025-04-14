@@ -1,3 +1,51 @@
+# Project Setup Instructions
+
+Follow the steps below to set up the project:
+
+## Prerequisites
+- Ensure you have [Node.js](https://nodejs.org/) installed (version 14 or higher).
+- Install [Git](https://git-scm.com/) if not already installed.
+- A code editor like [VS Code](https://code.visualstudio.com/).
+
+## Steps to Set Up
+
+1. **Clone the Repository**:
+-git clone https://github.com/Tharushi2001/Advanced_Server_Tutes.git
+-cd Advanced_Server_Tutes/Coursework-01
+
+2.**Install Dependencies**:
+-npm install
+
+3.**Set Up Environment Variables**
+-Create a .env file in the root directory
+
+4.**Run the Server**
+-npm start
+-The server should start on http://localhost:3000.
+
+5.**Features**
+-API Key Generation and Authentication
+-SQLite Database Integration
+-Country Fetching
+-Secure API Middleware
+-Docker Support
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
